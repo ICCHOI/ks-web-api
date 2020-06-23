@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"/>
 <body>
-
 <div class="container">
     <div th:replace="fragments/homeButton :: homeButton"/>
     <div>
@@ -22,10 +21,10 @@
                 <td th:text="${student.name}"></td>
                 <td th:text="${student.email}"></td>
                 <td>
-                    <a href="#" class="btn btn-primary" role="button">수정</a>
+                    <a th:href="@{/update/{id}(id=${student.id})}" class="btn btn-primary" role="button">수정</a>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-primary" role="button">삭제</a>
+                    <a th:href="@{/delete/{id}(id=${student.id})}" class="btn btn-primary" role="button">삭제</a>
                 </td>
             </tr>
             </tbody>

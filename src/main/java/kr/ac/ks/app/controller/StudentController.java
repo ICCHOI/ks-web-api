@@ -2,12 +2,13 @@ package kr.ac.ks.app.controller;
 
 import kr.ac.ks.app.domain.Student;
 import kr.ac.ks.app.repository.StudentRepository;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -45,4 +46,34 @@ public class StudentController {
         model.addAttribute("students", students);
         return "students/studentList";
     }
+
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable("id") Long id){
+        studentRepository.deleteById(id);
+        return "redirect:/students";
+    }
+
+    @GetMapping("update/{id}")
+    public String updateShowStudent(@PathVariable("id") Long id, Model model) {
+        Student student = studentRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("Invalid student id:" + id));
+        StudentForm studentForm = new StudentForm();
+        studentForm.setName(student.getName());
+        studentForm.setEmail(student.getEmail());
+        model.addAttribute("studentForm",studentForm);
+
+        return "students/studentForm";
+    }
+
+    @PostMapping("update/{id}")
+    public String updateStudent(@Valid StudentForm studentForm, @PathVariable("id") Long id, BindingResult result)  {
+        if (result.hasErrors()) {
+            return "students/studentForm";
+        }
+        Student student = studentRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("Invalid student id:" + id));
+        student.setName(studentForm.getName());
+        student.setEmail(studentForm.getEmail());
+        studentRepository.save(student);
+        return "redirect:/students";
+    }
+
 }

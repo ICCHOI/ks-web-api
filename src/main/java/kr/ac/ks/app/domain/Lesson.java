@@ -19,7 +19,7 @@ public class Lesson {
     private String name;
     private int quota;
 
-    @OneToMany
+    @OneToMany(mappedBy = "lesson")
     private List<Course> courses = new ArrayList<>();
 
     public Lesson() {

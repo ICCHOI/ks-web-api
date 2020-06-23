@@ -20,7 +20,7 @@ public class Student {
     private String name;
     private String email;
 
-    @OneToMany
+    @OneToMany (mappedBy = "student")
     private List<Course> courses = new ArrayList<>();
 
     public Student() {

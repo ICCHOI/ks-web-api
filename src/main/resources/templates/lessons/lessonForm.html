@@ -4,7 +4,7 @@
 <body>
 <div class="container">
     <div th:replace="fragments/homeButton :: homeButton"/>
-    <form th:action="@{/lessons/new}" th:object="${lessonForm}" method="post">
+    <form th:object="${lessonForm}" method="post">
         <div class="form-group">
             <label th:for="name">수업명</label>
             <input type="text" th:field="*{name}" class="form-control"
