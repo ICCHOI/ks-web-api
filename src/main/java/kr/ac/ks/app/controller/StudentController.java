@@ -47,13 +47,13 @@ public class StudentController {
         return "students/studentList";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("students/delete/{id}")
     public String deleteStudent(@PathVariable("id") Long id){
         studentRepository.deleteById(id);
         return "redirect:/students";
     }
 
-    @GetMapping("update/{id}")
+    @GetMapping("students/{id}")
     public String updateShowStudent(@PathVariable("id") Long id, Model model) {
         Student student = studentRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("Invalid student id:" + id));
         StudentForm studentForm = new StudentForm();
@@ -64,7 +64,7 @@ public class StudentController {
         return "students/studentForm";
     }
 
-    @PostMapping("update/{id}")
+    @PostMapping("students/{id}")
     public String updateStudent(@Valid StudentForm studentForm, @PathVariable("id") Long id, BindingResult result)  {
         if (result.hasErrors()) {
             return "students/studentForm";

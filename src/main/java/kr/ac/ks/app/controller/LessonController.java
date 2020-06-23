@@ -43,13 +43,13 @@ public class LessonController {
         return "lessons/lessonList";
     }
 
-    @GetMapping("delete/{id}")
+    @GetMapping("lessons/delete/{id}")
     public String deleteLesson(@PathVariable("id") Long id){
         lessonRepository.deleteById(id);
         return "redirect:/lessons";
     }
 
-    @GetMapping("update/{id}")
+    @GetMapping("lessons/{id}")
     public String updateShowLesson(@PathVariable("id") Long id, Model model) {
         Lesson lesson = lessonRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid lesson id:" + id));
         LessonForm lessonForm = new LessonForm();
@@ -60,7 +60,7 @@ public class LessonController {
         return "lessons/lessonForm";
     }
 
-    @PostMapping("update/{id}")
+    @PostMapping("lessons/{id}")
     public String updateLesson(@Valid LessonForm lessonForm, @PathVariable("id") Long id, BindingResult result)  {
         if (result.hasErrors()) {
             return "lessons/lessonForm";
@@ -69,7 +69,7 @@ public class LessonController {
         lesson.setName(lessonForm.getName());
         lesson.setQuota(lessonForm.getQuota());
         lessonRepository.save(lesson);
-        return "redirect:/students";
+        return "redirect:/lessons";
     }
 
 }

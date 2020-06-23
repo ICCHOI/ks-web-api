@@ -8,10 +8,13 @@ import kr.ac.ks.app.repository.LessonRepository;
 import kr.ac.ks.app.repository.StudentRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,4 +57,33 @@ public class CourseController {
         return "courses/courseList";
     }
 
+    @GetMapping("courses/delete/{id}")
+    public String deleteCourse(@PathVariable("id") Long id){
+        courseRepository.deleteById(id);
+        return "redirect:/courses";
+    }
+
+    @GetMapping("courses/{id}")
+    public String updateShowCourse(@PathVariable("id") Long id, Model model) {
+        Course course = courseRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid course id:" + id));
+        List<Student> students = studentRepository.findAll();
+        List<Lesson> lessons = lessonRepository.findAll();
+        model.addAttribute("students", students);
+        model.addAttribute("lessons", lessons);
+        return "courses/courseForm";
+    }
+
+    @PostMapping("courses/{id}")
+    public String updateLesson(@PathVariable("id") Long id, BindingResult result)  {
+        if (result.hasErrors()) {
+            return "courses/courseForm";
+        }
+        Course course = courseRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("Invalid course id:" + id));
+        Student student = studentRepository.findById(course.getStudent().getId()).orElseThrow( () -> new IllegalArgumentException("Invalid student id:" + id));
+        Lesson lesson = lessonRepository.findById(course.getLesson().getId()).orElseThrow( () -> new IllegalArgumentException("Invalid lesson id:" + id));
+        course.setLesson(lesson);
+        course.setStudent(student);
+        courseRepository.save(course);
+        return "redirect:/courses";
+    }
 }
